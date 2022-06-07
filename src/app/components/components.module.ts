@@ -8,11 +8,9 @@ import { CreateGoalsComponent } from '../components/create-goals/create-goals.co
   entryComponents:[
   ],
   declarations: [
-    RulesComponent,
     GoalsComponent,
   ],
   exports: [
-    RulesComponent,
     GoalsComponent,
   ],
   imports: [

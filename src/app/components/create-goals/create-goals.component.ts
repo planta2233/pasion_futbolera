@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild  } from '@angular/core';
-import { IonDatetime } from '@ionic/angular';
+import { IonDatetime, ModalController } from '@ionic/angular';
 import { format, parseISO, getDate, getMonth, getYear } from 'date-fns';
+import { RulesComponent } from '../../components/rules/rules.component';
 
 @Component({
   selector: 'app-create-goals',
@@ -12,15 +13,17 @@ export class CreateGoalsComponent implements OnInit {
 
   public options = [];
 
-  public choceGoal = { 
+  public choiceGoal = { 
     choseType: null,
     dateValue: null,
     amount: null,
   }
   public today: any;
+  public showErrors: Boolean = false;
+  public showPreview: Boolean = false;
   private minDays: number = 30;
 
-  constructor() { }
+  constructor( private modalCtrl: ModalController ) { }
 
   ngOnInit() {
     this.options = [
@@ -28,7 +31,6 @@ export class CreateGoalsComponent implements OnInit {
       {id: 1, value: 'travel', text: 'Viajar'},
       {id: 1, value: 'todo', text: 'Hacer algo'}
     ];
-
 
     var newDate = new Date(Date.now() + this.minDays * 24*60*60*1000);
     this.today = this.formatDate( newDate.toISOString() );
@@ -40,7 +42,26 @@ export class CreateGoalsComponent implements OnInit {
   }
 
   saveGoal(){
-    console.log( this.choceGoal );
+    if( !this.choiceGoal.dateValue || this.choiceGoal.amount <= 0 || !this.choiceGoal.choseType ){
+      this.showErrors = true;
+      return false;
+    }else{
+      this.showErrors = false;
+      this.modalCtrl.dismiss();
+      this.nextStep();
+    }
+  }
+
+  async nextStep(){
+
+    const modal = await this.modalCtrl.create({
+      component: RulesComponent,
+      componentProps: {
+        data: this.choiceGoal
+      }
+    });
+
+    modal.present();
   }
 
 }
