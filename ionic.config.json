@@ -1,0 +1,7 @@
+{
+  "name": "pasion_futbolera",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
