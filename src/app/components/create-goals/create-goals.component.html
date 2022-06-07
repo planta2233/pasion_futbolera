@@ -1,0 +1,49 @@
+<ion-content [fullscreen]="true">
+  <ion-grid>
+    <ion-row>
+      <ion-col size="12">
+        <div class="ion-text-center">
+          <h3>Nueva meta</h3>
+        </div>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="12">
+        <ion-card>
+          <ion-card-content>
+            <ion-item>
+              <ion-label>Tipo de Meta</ion-label>
+              <ion-select [(ngModel)]="choceGoal.choseType">
+                <ion-select-option *ngFor="let item of options" value="{{ item.value }}">{{ item.text }}</ion-select-option>
+              </ion-select>
+            </ion-item>
+            <ion-item button="true" id="open-date-input">
+              <ion-label>Fecha limite de ahorro</ion-label>
+              <ion-text slot="end">{{ choceGoal.dateValue }}</ion-text>
+              <ion-popover trigger="open-date-input" show-backdrop="false">
+                <ng-template>
+                  <ion-datetime
+                    #popoverDatetime
+                    presentation="date"
+                    (ionChange)="choceGoal.dateValue = formatDate(popoverDatetime.value)"
+                  ></ion-datetime>
+                </ng-template>
+              </ion-popover>
+            </ion-item>
+            <ion-item>
+              <ion-label position="stacked">Meta de ahorro en USD</ion-label>
+              <ion-input [(ngModel)]="choceGoal.amount" placeholder="2500" type="number"></ion-input>
+            </ion-item>
+          </ion-card-content>
+        </ion-card>
+
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-button (click)="saveGoal()" expand="full">Continuar</ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+</ion-content>
