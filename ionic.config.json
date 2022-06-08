@@ -4,8 +4,8 @@
     "capacitor": {}
   },
   "type": "angular",
-  "proxies": {
+  "proxies": [{
     "path": "/api",
     "proxyUrl": "https://api.football-data.org"
-  }
+  }]
 }

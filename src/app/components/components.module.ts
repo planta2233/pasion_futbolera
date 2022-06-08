@@ -3,18 +3,21 @@ import { CommonModule } from '@angular/common';
 import { GoalsComponent } from '../components/goals/goals.component';
 import { RulesComponent } from '../components/rules/rules.component';
 import { CreateGoalsComponent } from '../components/create-goals/create-goals.component';
+import { IonicModule } from '@ionic/angular';
 
 @NgModule({
   entryComponents:[
+    GoalsComponent
   ],
   declarations: [
-    GoalsComponent,
+    GoalsComponent
   ],
   exports: [
-    GoalsComponent,
+    GoalsComponent
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    IonicModule
   ]
 })
 export class ComponentsModule { }

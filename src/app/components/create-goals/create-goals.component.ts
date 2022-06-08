@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild  } from '@angular/core';
+import { Component, OnInit, ViewChild, Input  } from '@angular/core';
 import { IonDatetime, ModalController } from '@ionic/angular';
 import { format, parseISO, getDate, getMonth, getYear } from 'date-fns';
 import { RulesComponent } from '../../components/rules/rules.component';
@@ -14,9 +14,11 @@ export class CreateGoalsComponent implements OnInit {
   public options = [];
 
   public choiceGoal = { 
+    id: null,
     choseType: null,
     dateValue: null,
     amount: null,
+    rules: []
   }
   public today: any;
   public showErrors: Boolean = false;
@@ -24,6 +26,8 @@ export class CreateGoalsComponent implements OnInit {
   private minDays: number = 30;
 
   constructor( private modalCtrl: ModalController ) { }
+  
+  @Input() data;
 
   ngOnInit() {
     this.options = [
@@ -31,6 +35,10 @@ export class CreateGoalsComponent implements OnInit {
       {id: 1, value: 'travel', text: 'Viajar'},
       {id: 1, value: 'todo', text: 'Hacer algo'}
     ];
+
+    if( this.data ){
+      this.choiceGoal = {...this.data}
+    }
 
     var newDate = new Date(Date.now() + this.minDays * 24*60*60*1000);
     this.today = this.formatDate( newDate.toISOString() );
@@ -48,6 +56,23 @@ export class CreateGoalsComponent implements OnInit {
     }else{
       this.showErrors = false;
       this.modalCtrl.dismiss();
+      // save user goal
+      this.choiceGoal.id = new Date().getTime();
+      
+      let goalsData = [];
+
+      if( this.data ){
+        this.nextStep();
+        return false;
+      }
+
+      if( localStorage.getItem('goalObject') ){
+        goalsData = JSON.parse( localStorage.getItem('goalObject') );
+      }
+
+      goalsData.push(this.choiceGoal);
+
+      localStorage.setItem('goalObject', JSON.stringify(goalsData));
       this.nextStep();
     }
   }
@@ -57,7 +82,8 @@ export class CreateGoalsComponent implements OnInit {
     const modal = await this.modalCtrl.create({
       component: RulesComponent,
       componentProps: {
-        data: this.choiceGoal
+        data: this.data ? this.data : this.choiceGoal,
+        editMode: this.data ? true : false
       }
     });
 

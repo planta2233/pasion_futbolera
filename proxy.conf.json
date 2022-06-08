@@ -1,8 +1,9 @@
 {
-    "/api":{
+    "/api/*":{
         "target": "https://api.football-data.org",
         "secure": false,
         "logLevel": "debug",
-        "changeOrigin": false
+        "changeOrigin": true,
+        "pathRewrite": {"^/api":""}
     }
 }

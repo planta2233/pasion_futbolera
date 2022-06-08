@@ -9,6 +9,7 @@ import { FootballService } from '../../services/football.service';
 export class RulesComponent implements OnInit {
 
   @Input() data;
+  @Input() editMode;
 
   public rulesOption = {
     team: null,
@@ -26,20 +27,26 @@ export class RulesComponent implements OnInit {
   constructor( private footballServices: FootballService ) { }
 
   ngOnInit() {
-    console.log(this.data);
-    this.footballServices.getSoccerBranch().subscribe( console.log );
+    if( this.editMode ){
+      if( localStorage.getItem('goalObject') ){
+        let goalsData = JSON.parse( localStorage.getItem('goalObject') );
+        this.rules = goalsData.find( (g) => g.id === this.data.id ).rules;
+        this.showMyRules = true;
+      }
+    }
+    this.footballServices.getSoccerBranch();
     this.options = [
       { id: 1, value: 'play', text: 'Por cada juego' },
       { id: 2, value: 'victory', text: 'Por victoria' },
       { id: 3, value: 'goal', text: 'Por cada gol' },
     ];
     this.teams = [
-      { id: 1, value: 'america', text: 'america' },
-      { id: 2, value: 'chivas', text: 'chivas' },
-      { id: 3, value: 'atlas', text: 'atlas' },
-      { id: 1, value: 'tigres', text: 'tigres' },
-      { id: 2, value: 'juarez', text: 'juarez' },
-      { id: 3, value: 'monterrey', text: 'monterrey' },
+      { id: 1, value: 'Chelsea', text: 'Chelsea' },
+      { id: 2, value: 'Manchester City', text: 'Manchester City' },
+      { id: 3, value: 'Inter Milán', text: 'Inter Milán' },
+      { id: 1, value: 'Bayern Múnich', text: 'Bayern Múnich' },
+      { id: 2, value: 'Villarreal', text: 'Villarreal' },
+      { id: 3, value: 'Real Madrid', text: 'Real Madrid' },
     ];
   }
 
@@ -62,6 +69,15 @@ export class RulesComponent implements OnInit {
       this.rulesOption.amount = null;
       this.showError = false;
       this.showErrorAmount = false;
+
+      if( localStorage.getItem('goalObject') ){
+        let goalsData = JSON.parse( localStorage.getItem('goalObject') );
+        const index = goalsData.map(g => g.id).indexOf(this.data.id);
+
+        goalsData[index].rules.push( ruleObject );
+        localStorage.setItem('goalObject', JSON.stringify(goalsData));
+        
+      }
     }
 
     this.showMyRules = true;
